@@ -6,7 +6,7 @@ Pytorch implementation of the paper "**GABIC: GRAPH-BASED ATTENTION BLOCK FOR IM
 [Paper link](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=10647413)
 
 <div align="center">
-<img src="imgs/teaser_gabic.png" alt="teaser" width="200"/>
+<img src="imgs/teaser_gabic.png" alt="teaser" width="400"/>
 </div>
 
 ## Abstract
@@ -22,7 +22,7 @@ compression performance.
 
 
 <div align="center">
-<img src="imgs/arch_gabic.png" alt="arch" width="600"/>
+<img src="imgs/arch_gabic.png" alt="arch" width="1200"/>
 </div>
 
 
@@ -64,5 +64,5 @@ python -m evaluate.eval --dataset /path/to/kodak
 
 
 <div align="center">
-<img src="imgs/rd_gabic.png" alt="rd" width="600"/>
+<img src="imgs/rd_gabic.png" alt="rd" width=1200"/>
 </div>
