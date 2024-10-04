@@ -27,6 +27,11 @@ compression performance.
 
 
 ## Usage
+
+### Environment
+- conda env create -f environment.yml
+- conda activate gabic
+
 ### Train
 
 ```
@@ -51,8 +56,23 @@ python train.py \
 ```
 
 ### Evaluation
-- Download our pretrained model in the GABIC directory from [here](TODO).
+- Download our pretrained model in the GABIC directory from [here](https://drive.google.com/file/d/1MQ_F4yDImJWD2yuHE-ozA-W14IRsJr0j/view?usp=sharing).
 - Extract model_results.zip
+```
+GABIC
+│   README.md
+│  
+└───model_results
+│   └───wgraph_k9
+│       │   inference.json
+│       │   q1-model.pth.tar
+│       │   ...
+│   
+└───src
+    │   train.py
+    │   ...
+```
+
 - Run:
 ```
 cd src
