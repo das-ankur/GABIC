@@ -342,8 +342,7 @@ if __name__ == "__main__":
     args = my_parser.parse_args()
     
     configs = [
-        '../model_results/wgraph_k9/inference.json'
-
+        '/kaggle/input/gabic/pytorch/default/1/inference.json'
     ]
     # configs = [
     #     'Cheng2020',
@@ -358,7 +357,7 @@ if __name__ == "__main__":
             args.dataset,
             saved_checkpoint=True)
         
-        save_path = f'../model_results/compression_results'
+        save_path = f'compression_results'
         
         os.makedirs(save_path, exist_ok=True)
         print(f'Results will be saved on {save_path}')
