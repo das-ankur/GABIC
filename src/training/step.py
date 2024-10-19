@@ -113,7 +113,8 @@ def test_one_epoch(epoch, test_dataloader, model, criterion, counter, label):
 
     psnr = AverageMeter()
     ssim = AverageMeter()
-
+    print("Checkpoint!")
+    exit(1)
     with torch.no_grad():
         for d in test_dataloader:
             d = d.to(device)
