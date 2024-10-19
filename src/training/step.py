@@ -118,6 +118,8 @@ def test_one_epoch(epoch, test_dataloader, model, criterion, counter, label):
         for d in test_dataloader:
             d = d.to(device)
             out_net = model(d)
+            print(out_net)
+            exit(1)
             out_criterion = criterion(out_net, d)
 
             psnr.update(compute_psnr(d, out_net["x_hat"]))
