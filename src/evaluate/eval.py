@@ -202,7 +202,7 @@ def eval_models(models, dataloader, device):
                 metrics, bpp, rate, x_hat, loss = inference(model,x,x_padded,unpad)
                 x_hat = (255 * x_hat.permute(0, 2, 3, 1).detach().cpu().numpy()).astype(np.uint8)
                 x_hat = x_hat[0]
-                img = Image.fromarray(img)
+                img = Image.fromarray(x_hat)
                 img.save(os.path.join('compressed_images', 'temp.png'))
                 exit(1)
                 models[model_type][qp]['psnr'].update(metrics["psnr"])
