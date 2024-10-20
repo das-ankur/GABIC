@@ -199,7 +199,7 @@ def eval_models(models, dataloader, device):
                 x_hat = (255 * x_hat.permute(0, 2, 3, 1).detach().cpu().numpy()).astype(np.uint8)
                 x_hat = x_hat[0]
                 img = Image.fromarray(x_hat)
-                img.save(os.path.join(f'/kaggle/working/GABIC/compressed_images', 'img_c{j}__m{qp}.png'))
+                img.save(os.path.join('/kaggle/working/GABIC/compressed_images', f'img_c{j}__m{qp}.png'))
                 models[model_type][qp]['psnr'].update(metrics["psnr"])
                 models[model_type][qp]['ms_ssim'].update(metrics["ms-ssim"])
                 models[model_type][qp]['bpps'].update(bpp.item())
