@@ -177,9 +177,6 @@ def eval_models(models, dataloader, device):
     res_metrics = {}
 
     for j,(x,_) in enumerate(dataloader):
-        if(j >= 30 ):
-            break
-
         res_metrics_img = {}
         print(j)
         x = x.to(device)
@@ -202,8 +199,7 @@ def eval_models(models, dataloader, device):
                 x_hat = (255 * x_hat.permute(0, 2, 3, 1).detach().cpu().numpy()).astype(np.uint8)
                 x_hat = x_hat[0]
                 img = Image.fromarray(x_hat)
-                img.save(os.path.join('compressed_images', 'img_c{j}__m{qp}.png'))
-                exit(1)
+                img.save(os.path.join(f'/kaggle/working/GABIC/compressed_images', 'img_c{j}__m{qp}.png'))
                 models[model_type][qp]['psnr'].update(metrics["psnr"])
                 models[model_type][qp]['ms_ssim'].update(metrics["ms-ssim"])
                 models[model_type][qp]['bpps'].update(bpp.item())
