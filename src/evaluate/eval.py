@@ -198,12 +198,11 @@ def eval_models(models, dataloader, device):
             for qp in sorted(list(models[model_type].keys())):
                 model = models[model_type][qp]['model']
                 criterion = models[model_type][qp]['criterion']
-                
                 metrics, bpp, rate, x_hat, loss = inference(model,x,x_padded,unpad)
                 x_hat = (255 * x_hat.permute(0, 2, 3, 1).detach().cpu().numpy()).astype(np.uint8)
                 x_hat = x_hat[0]
                 img = Image.fromarray(x_hat)
-                img.save(os.path.join('compressed_images', 'temp.png'))
+                img.save(os.path.join('compressed_images', 'img_c{j}__m{qp}.png'))
                 exit(1)
                 models[model_type][qp]['psnr'].update(metrics["psnr"])
                 models[model_type][qp]['ms_ssim'].update(metrics["ms-ssim"])
