@@ -200,7 +200,8 @@ def eval_models(models, dataloader, device):
                 criterion = models[model_type][qp]['criterion']
                 
                 metrics, bpp, rate, x_hat, loss = inference(model,x,x_padded,unpad)
-
+                print(x_hat.shape)
+                exit(1)
                 models[model_type][qp]['psnr'].update(metrics["psnr"])
                 models[model_type][qp]['ms_ssim'].update(metrics["ms-ssim"])
                 models[model_type][qp]['bpps'].update(bpp.item())
@@ -221,7 +222,7 @@ def eval_models(models, dataloader, device):
             }
             print(f'{qp}: {model_res[qp_name]}')
         res_metrics[model_type] = model_res
-    return res_metrics   
+    return res_metrics
 
 
 def extract_specific_model_performance(metrics, type):
