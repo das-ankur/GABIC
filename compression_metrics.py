@@ -17,8 +17,12 @@ def load_image(image_path):
 def calculate_psnr(original_path, compressed_path):
     original = load_image(original_path)
     compressed = load_image(compressed_path)
-    
-    mse = np.mean((original - compressed) ** 2)
+    try:
+        mse = np.mean((original - compressed) ** 2)
+    except Exception:
+        target_height, target_width = compressed.shape[:2]
+        original = cv2.resize(original, (target_width, target_height), interpolation=cv2.INTER_AREA)
+        mse = np.mean((original - compressed) ** 2)
     if mse == 0:  # No difference
         return 100
     max_pixel = 255.0
@@ -32,8 +36,12 @@ def calculate_ssim(original_path, compressed_path):
     # Set win_size to be the minimum of image dimensions (height, width) or 7, and set channel_axis for color images
     min_dim = min(original.shape[:2])  # Get the smaller dimension of the image
     win_size = min(min_dim, 7)  # Ensure win_size is not larger than the smallest dimension
-    
-    ssim_index, _ = ssim(original, compressed, full=True, multichannel=True, win_size=win_size, channel_axis=-1)
+    try:
+        ssim_index, _ = ssim(original, compressed, full=True, multichannel=True, win_size=win_size, channel_axis=-1)
+    except Exception:
+        target_height, target_width = compressed.shape[:2]
+        original = cv2.resize(original, (target_width, target_height), interpolation=cv2.INTER_AREA)
+        ssim_index, _ = ssim(original, compressed, full=True, multichannel=True, win_size=win_size, channel_axis=-1)
     return ssim_index
 
 # Simulate Multiscale SSIM (MS-SSIM)
@@ -46,6 +54,9 @@ def calculate_ms_ssim(original_path, compressed_path):
         return ssim_index
     original = load_image(original_path)
     compressed = load_image(compressed_path)
+    if original.shape != compressed.shape:
+        target_height, target_width = compressed.shape[:2]
+        original = cv2.resize(original, (target_width, target_height), interpolation=cv2.INTER_AREA)
     # Downscale images and compute SSIM at different scales
     scales = [1, 0.5, 0.25]  # Different scales (original, half, quarter resolution)
     ms_ssim_value = 0
