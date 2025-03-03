@@ -158,16 +158,17 @@ def inference_entropy_estimation(model,x, x_padded, unpad, criterion):
 
 @torch.no_grad()
 def inference(model,x, x_padded, unpad):
+    start = time.time()
     out_enc = model.compress(x_padded)
     out_dec = model.decompress(out_enc["strings"], out_enc["shape"])
-
+    end = time.time()
     out_dec["x_hat"] = F.pad(out_dec["x_hat"], unpad)
     metrics = compute_metrics(x, out_dec["x_hat"], 255)
 
     num_pixels = x.size(0) * x.size(2) * x.size(3)
     bpp = sum(len(s[0]) for s in out_enc["strings"]) * 8.0 / num_pixels
     rate = bpp*num_pixels 
-    return metrics, torch.tensor([bpp]), rate, out_dec["x_hat"], 0.0
+    return metrics, torch.tensor([bpp]), rate, out_dec["x_hat"], 0.0, end-start
 
 
 @torch.no_grad()
@@ -191,10 +192,12 @@ def eval_models(models, dataloader, device):
             print(f'{x.shape} --> {x_padded.shape}')
 
         for model_type in list(models.keys()):
+            # inference_time = []
             for qp in sorted(list(models[model_type].keys())):
                 model = models[model_type][qp]['model']
                 criterion = models[model_type][qp]['criterion']
-                metrics, bpp, rate, x_hat, loss = inference(model,x,x_padded,unpad)
+                metrics, bpp, rate, x_hat, loss, inf_time = inference(model,x,x_padded,unpad)
+                # inference_time.append(inf_time)
                 x_hat = (255 * x_hat.permute(0, 2, 3, 1).detach().cpu().numpy()).astype(np.uint8)
                 x_hat = x_hat[0]
                 img = Image.fromarray(x_hat)
@@ -204,6 +207,7 @@ def eval_models(models, dataloader, device):
                 models[model_type][qp]['bpps'].update(bpp.item())
                 models[model_type][qp]['rate'].update(rate)
                 models[model_type][qp]['loss'].update(loss)
+                models[model_type][qp]['inference_time'].update(inf_time)
 
     for model_type in list(models.keys()):
         model_res = {}
@@ -215,7 +219,8 @@ def eval_models(models, dataloader, device):
                 'mssim': models[model_type][qp]['ms_ssim'].avg,
                 'bpp': models[model_type][qp]['bpps'].avg,
                 'rate': models[model_type][qp]['rate'].avg,
-                'loss': models[model_type][qp]['loss'].avg
+                'loss': models[model_type][qp]['loss'].avg,
+                'inference_time': models[model_type][qp]['inference_time'].avg
             }
             print(f'{qp}: {model_res[qp_name]}')
         res_metrics[model_type] = model_res
