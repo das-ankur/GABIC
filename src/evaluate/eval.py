@@ -1,5 +1,6 @@
 import torch 
 import os 
+import numpy as np
 from torchvision import transforms
 from PIL import Image, ImageChops
 import torch
@@ -192,12 +193,12 @@ def eval_models(models, dataloader, device):
             print(f'{x.shape} --> {x_padded.shape}')
 
         for model_type in list(models.keys()):
-            # inference_time = []
+            inference_time = []
             for qp in sorted(list(models[model_type].keys())):
                 model = models[model_type][qp]['model']
                 criterion = models[model_type][qp]['criterion']
                 metrics, bpp, rate, x_hat, loss, inf_time = inference(model,x,x_padded,unpad)
-                # inference_time.append(inf_time)
+                inference_time.append(inf_time)
                 x_hat = (255 * x_hat.permute(0, 2, 3, 1).detach().cpu().numpy()).astype(np.uint8)
                 x_hat = x_hat[0]
                 img = Image.fromarray(x_hat)
@@ -207,7 +208,7 @@ def eval_models(models, dataloader, device):
                 models[model_type][qp]['bpps'].update(bpp.item())
                 models[model_type][qp]['rate'].update(rate)
                 models[model_type][qp]['loss'].update(loss)
-                models[model_type][qp]['inference_time'].update(inf_time)
+                print(f"Inference time of {qp}: {np.mean(inference_time)}")
 
     for model_type in list(models.keys()):
         model_res = {}
